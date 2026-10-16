@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">DSCapture</string>
+    <string name="notif_channel">Packet Capture</string>
+    <string name="notif_title">DSCapture — recording</string>
+    <string name="status_idle">Not capturing</string>
+    <string name="status_running">Capturing…</string>
+    <string name="status_need_storage">Storage access needed before capture can start</string>
+    <string name="status_need_vpn">Grant the VPN prompt to begin</string>
+    <string name="btn_grant_storage">Grant storage access</string>
+    <string name="btn_start">Start capturing</string>
+    <string name="btn_stop">Stop capturing &amp; export</string>
+</resources>
