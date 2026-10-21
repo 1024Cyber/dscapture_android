@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- INTERNET: needed so the capture engine can open its own protected
+         sockets to relay each intercepted TCP/UDP flow to its real
+         destination: without this, accepting the VPN would cut the
+         device off the network the moment capture starts. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Needed to write the pcap to a shared, human-browsable folder
+         (/storage/emulated/0/dscapture) instead of the app-private
+         external-files dir. WRITE_EXTERNAL_STORAGE covers Android 10 and
+         below; MANAGE_EXTERNAL_STORAGE (granted via a one-time Settings
+         screen, see MainActivity.requestAllFilesAccess) covers 11+. -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+
+    <application
+        android:label="@string/app_name"
+        android:icon="@drawable/ic_dscapture"
+        android:allowBackup="false"
+        android:theme="@style/Theme.DSCapture.Main">
+
+        <!-- Standalone entry point: Start/Stop buttons, launched from the
+             app drawer like any normal app. -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.DSCapture.Main">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Launched via: adb shell am start -n io.droidsentinel.capture/.ConsentActivity
+             Exported so DroidSentinel can trigger it over adb, same pattern
+             ACBridge already uses for its own MainActivity. Shows the
+             system VPN-permission dialog on first use only: Android
+             remembers the grant after that, so every later start is silent. -->
+        <activity
+            android:name=".ConsentActivity"
+            android:exported="true"
+            android:theme="@style/Theme.DSCapture.Transparent"
+            android:excludeFromRecents="true"
+            android:noHistory="true" />
+
+        <service
+            android:name=".CaptureVpnService"
+            android:exported="false"
+            android:permission="android.permission.BIND_VPN_SERVICE"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Local on-device packet capture for authorized security testing, started and stopped by the user via the paired DroidSentinel desktop app." />
+            <intent-filter>
+                <action android:name="android.net.VpnService" />
+            </intent-filter>
+        </service>
+
+    </application>
+</manifest>

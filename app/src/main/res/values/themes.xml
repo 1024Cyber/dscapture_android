@@ -1,0 +1,18 @@
+<resources>
+    <!-- Fully transparent, no-animation theme: the consent activity is
+         meant to flash briefly (or not show at all, if consent was already
+         granted) and close itself, the same way ACBridge's exporter
+         activity already behaves in this project. -->
+    <style name="Theme.DSCapture.Transparent" parent="android:Theme.Translucent.NoTitleBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <!-- Normal visible theme for the standalone MainActivity UI. -->
+    <style name="Theme.DSCapture.Main" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#1B1F27</item>
+        <item name="android:statusBarColor">#1B1F27</item>
+    </style>
+</resources>
